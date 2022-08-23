@@ -8,7 +8,7 @@ const password = process.env.PASSWORD;
 const host = process.env.DB_HOST;
 
 const connect = ()=>{
-    return mongoose.connect(`mongodb+srv://${user}:${password}@${host}/?retryWrites=true&w=majority`)
+    return mongoose.connect(`mongodb+srv://${user}:${password}@${host}/userModuleDB?retryWrites=true&w=majority`)
     .then(()=>{
         console.log('connected to db 🤓');
     })
