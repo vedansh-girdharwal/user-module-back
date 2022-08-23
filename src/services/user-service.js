@@ -37,6 +37,7 @@ const getUser = (email)=>{
             error.type = "BadCredentials";
             throw error;
         }
+        return user;
     })
     .catch(error=>{
         error.type = "BadCredentials"
@@ -52,6 +53,7 @@ const matchPassword = (user, typedPassword)=>{
             error.type = "BadCredentials";
             throw error
         }
+        return result;
     })
     .catch(error=>{
         const err = new Error(error.message);
