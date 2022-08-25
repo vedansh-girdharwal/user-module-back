@@ -3,6 +3,7 @@ require('./init.js');
 require('./src/models/users.js');
 const {connect} = require('./src/data/connect.js');
 connect();
+const cors = require('cors');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
@@ -17,6 +18,7 @@ app.use(morgan('combined'));
 app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cors());
 
 app.use('/auth',userRoutes);
 

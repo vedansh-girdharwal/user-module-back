@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { user_signup } = require('../../../../padhai/full stack dev/node basic/api/controllers/user.js');
 const {addUser,getUser,matchPassword} = require('../services/user-service.js');
 
 const register = (req,res,next)=>{
@@ -52,6 +53,7 @@ const login = (req,res,next)=>{
                         data:{
                             name: usere.name,
                             email: usere.email,
+                            role: usere.role,
                             token
                         }
                     })
