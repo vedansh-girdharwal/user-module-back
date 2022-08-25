@@ -26,6 +26,12 @@ app.use(pageNotFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
+if(process.env.NODE_ENV === "production"){
+    app.use(express.static(__dirname+"/dist/"));
+    app.get("*",(req,res)=>{
+        res.sendFile(__dirname+"/dist/index.html");
+    })
+}
 const server = app.listen(PORT,()=>{
     console.log(`server is running on PORT ${PORT}`)
 });
