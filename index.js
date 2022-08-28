@@ -1,6 +1,7 @@
 require('dotenv').config();
 require('./init.js');
 require('./src/models/users.js');
+require('./src/models/userOTPVerification.js');
 const {connect} = require('./src/data/connect.js');
 connect();
 const cors = require('cors');
@@ -18,7 +19,9 @@ app.use(morgan('combined'));
 app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cors());
+app.use(cors({
+    origin:'http://localhost:8080'
+}));
 
 app.use('/auth',userRoutes);
 

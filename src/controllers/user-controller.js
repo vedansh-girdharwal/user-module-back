@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { user_signup } = require('../../../../padhai/full stack dev/node basic/api/controllers/user.js');
 const {addUser,getUser,matchPassword} = require('../services/user-service.js');
+const {sendOTPEmail} = require('../services/user-otp-verification-service.js');
 
 const register = (req,res,next)=>{
     const user = req.body;
@@ -15,10 +15,14 @@ const register = (req,res,next)=>{
             ...updatedUser.toObject()
         };
         delete data.password;
-        res.status(201).json({
-            status:"User created",
-            data:data
-        })
+        sendOTPEmail(updatedUser)
+            .then(()=>{
+                res.status(201).json({
+                    status:"PENDING",
+                    message:"Verification otp email sent",
+                    data:data
+                })
+            })
     })
     .catch(error=>{
         const httpError = new HttpError(error.message, 400);
@@ -36,34 +40,40 @@ const login = (req,res,next)=>{
     const {email, password} = credentials;
     getUser(email)
     .then(usere=>{
-        matchPassword(usere,password)
-        .then(result=>{
-            if(result){
-                const claims = {
-                    role: usere.role,
-                    email: usere.email
-                }
-                jwt.sign(claims,process.env.JWT_SECRET_KEY,function(error,token){
-                    if(error){
-                        const httpError = new HttpError("jwt error",500);
-                        next(httpError);
+        const {verified} = usere;
+        if(verified){
+            matchPassword(usere,password)
+            .then(result=>{
+                if(result){
+                    const claims = {
+                        role: usere.role,
+                        email: usere.email
                     }
-                    res.status(200).json({
-                        message:"logged in successfully",
-                        data:{
-                            name: usere.name,
-                            email: usere.email,
-                            role: usere.role,
-                            token
+                    jwt.sign(claims,process.env.JWT_SECRET_KEY,function(error,token){
+                        if(error){
+                            const httpError = new HttpError("jwt error",500);
+                            next(httpError);
                         }
+                        res.status(200).json({
+                            message:"logged in successfully",
+                            data:{
+                                name: usere.name,
+                                email: usere.email,
+                                role: usere.role,
+                                token
+                            }
+                        })
                     })
-                })
-            }else{
-                res.status(401).json({
-                    message:"auth failed"
-                })
-            }
-        })
+                }else{
+                    res.status(401).json({
+                        message:"auth failed"
+                    })
+                }
+            })
+        }else{
+            const httpError = new HttpError("Email is not verified",401);
+            next(httpError);
+        }
     })
     .catch(error=>{
         if(error.type === "BadCredentials"){
