@@ -57,6 +57,25 @@ userSchema.pre('save',function(done){
         })
     })
 });
+userSchema.post('updateOne',function(){
+    const user = this;
+    // if(!user.isModified('password')){
+    //     done();
+    //     return;
+    // }
+    bcrypt.genSalt(SALT_FACTOR, function(err,salt){
+        if(err){
+            return err;
+        }
+        bcrypt.hash(user.password, salt,function(err,hashedPassword){
+            if(err){
+                return err;
+            }
+            user.password = hashedPassword;
+            
+        })
+    })
+});
 
 userSchema.methods.checkPassword = async function(simplePassword){
     const hashedPassword = this.password;

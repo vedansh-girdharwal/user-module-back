@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const passwordRequestSchema = new mongoose.Schema({
     createdAt:{
-        type: Date
+        type: Date,
+        expires:3600
     },
     email:{
         type: String,

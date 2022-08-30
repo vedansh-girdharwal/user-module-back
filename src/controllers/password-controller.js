@@ -17,22 +17,22 @@ const sendResetLink = (req,res,next)=>{
 
 const resetPassword = (req,res,next)=>{
     const id = req.params.id;
-    const newPass = req.body;
+    const {password:newPass} = req.body;
     changePassword(id,newPass)
         .then(result=>{
-            if(result){
+            if(result==="UPDATED"){
                 res.status(201).json({
                     status:"UPDATED",
-                    message:"Password has been updated"
+                    message:`${result}`
                 })
             }else{
                 res.status(201).json({
                     status:"TIMEOUT",
-                    message:"Password reset link has been expired"
+                    message:`${result}`
                 })
             }
         }).catch(error=>{
-            const httpError = new HttpError(error.message,201);
+            const httpError = new HttpError(error.message,401);
             next(httpError);
         })
 }

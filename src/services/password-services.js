@@ -33,9 +33,9 @@ const sendResetPasswordEmail = (email)=>{
         createdAt: Date.now(),
         email: email
     };
-    return PasswordRequest.createIndex({ "createdAt": 1 }, { expireAfterSeconds: 120 })
-        .then(()=>{
-            return PasswordRequest.insert(passwordRequest)
+    // return PasswordRequest.createIndex({ "createdAt": 1 }, { expireAfterSeconds: 120 })
+    //     .then(()=>{
+            return PasswordRequest.create(passwordRequest)
                 .then((record)=>{
                     const {_id} = record;
                     const link = `http://localhost:8080/resetPassword/${_id}`;
@@ -43,27 +43,31 @@ const sendResetPasswordEmail = (email)=>{
                         .then(()=>{
                             return true;
                         })
-                })
+                // })
         }).catch(error=>{
             throw error;
         })
 }
 
 const changePassword = (id, newPassword)=>{
-    return PasswordRequest.findById(id)
+    return PasswordRequest.find({_id:id})
         .then(record=>{
-            if(!record === null){
-                const {email} = record;
-                    return User.findOne({email})
-                        .then((user)=>{
+            if(!(record === null)){
+                const {email} = record[0];
+                    return User.findOne({email}).then((user)=>{
+                            console.log('---------');
                             const {_id} = user;
-                            return User.updateOne({_id},{password:newPassword})
-                                .then(()=>{
-                                    return PasswordRequest.deleteMany({_id:id})
-                                        .then(()=>{
-                                            return true
-                                        })
-                                })
+                            console.log(_id);
+                            return User.updateOne({email},{password:newPassword}).then((res)=>{
+                                return res.modifiedCount
+                            })
+                                // .then(()=>{
+                                //     // return PasswordRequest.deleteMany({_id:id})
+                                //     //     .then(()=>{
+                                //     //         return true
+                                //     //     })
+                                //     return true;
+                                // })
                         })
             }else{
                 return false;
