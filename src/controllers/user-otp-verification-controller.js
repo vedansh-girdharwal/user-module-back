@@ -1,4 +1,5 @@
-const {otpVerification, getOTPVerificationRecord} = require('../services/user-otp-verification-service.js');
+const {otpVerification, getOTPVerificationRecord, sendOTPEmail, deleteOTPVerificationRecord} = require('../services/user-otp-verification-service.js');
+const {getUserById} = require('../services/user-service');
 
 const verifyOTP = (req,res,next)=>{
     const userId = req.params.id;
@@ -22,6 +23,11 @@ const verifyOTP = (req,res,next)=>{
                                     status:'VERIFIED',
                                     message: 'User email verified successfully'
                                 })
+                            }else{
+                                res.status(200).json({
+                                    status:"INVALID",
+                                    message: 'Invalid OTP. Please enter the correct OTP'
+                                })  
                             }
                         })
                 }
@@ -32,6 +38,27 @@ const verifyOTP = (req,res,next)=>{
     }
 }
 
+const resendOTP = (req,res,next)=>{
+    const userId = req.params.id;
+    getUserById(userId)
+        .then((user)=>{
+            const {email} = user;
+            deleteOTPVerificationRecord(userId)
+                .then(()=>{
+                    sendOTPEmail({_id:userId,email})
+                        .then(()=>{
+                            res.status(200).json({
+                                message:'OTP has been resent'
+                            })
+                        })
+                })
+        }).catch(error=>{
+            const httpError = new HttpError(error.message,400);
+            next(httpError);
+        })
+}
+
 module.exports = {
-    verifyOTP
+    verifyOTP,
+    resendOTP
 }

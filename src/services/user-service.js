@@ -61,8 +61,26 @@ const matchPassword = (user, typedPassword)=>{
         throw err
     })
 }
+
+const getUserById = (userId)=>{
+    return User.findById(userId)
+        .then(user=>{
+        if(user===null){
+            const error = new Error('Bad Credentials');
+            error.type = "BadCredentials";
+            throw error;
+        }
+        return user;
+    })
+    .catch(error=>{
+        error.type = "BadCredentials"
+        throw error;
+    })
+}
+
 module.exports = {
     addUser,
     getUser,
-    matchPassword
+    matchPassword,
+    getUserById
 }

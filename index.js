@@ -2,6 +2,7 @@ require('dotenv').config();
 require('./init.js');
 require('./src/models/users.js');
 require('./src/models/userOTPVerification.js');
+require('./src/models/passwordRequest.js');
 const {connect} = require('./src/data/connect.js');
 connect();
 const cors = require('cors');

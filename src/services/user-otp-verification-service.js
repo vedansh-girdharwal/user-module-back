@@ -68,33 +68,42 @@ const otpVerification = (record, simpleOtp)=>{
                 throw err;
             })
     }else{
-        console.log('00000000000');
-        console.log(simpleOtp );
-        console.log(otp );
         return bcrypt.compare(simpleOtp.otp,otp)
             .then((result)=>{
                 if(result){
-                    return true;
-                }else{
-                    const err = new Error("Invalid OTP. Check the OTP you entered");
-                    throw err;
-                }
-            }).then(()=>{
-                return User.updateOne({_id: userId},{verified:true})
+                    return User.updateOne({_id: userId},{verified:true})
                     .then(()=>{
                         return UserOTPVerification.deleteMany({userId})
                             .then(()=>{
                                 return true;
                             })
                     })
+                }else{
+                    return false;
+                }
             }).catch(error=>{
                 throw error;
             })
     }
 }
 
+const deleteOTPVerificationRecord = (userId)=>{
+    return UserOTPVerification.findOne({userId})
+        .then((record)=>{
+            if(record===null){
+                const error = new Error('Bad Credentials');
+                error.type = "BadCredentials";
+                throw error;
+            }
+            return UserOTPVerification.deleteMany({userId})
+        }).catch(error=>{
+            throw error;
+        })
+}
+
 module.exports = {
     sendOTPEmail,
     getOTPVerificationRecord,
-    otpVerification
+    otpVerification,
+    deleteOTPVerificationRecord
 }
