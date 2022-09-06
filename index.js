@@ -6,6 +6,7 @@ require('./src/models/passwordRequest.js');
 const {connect} = require('./src/data/connect.js');
 connect();
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
@@ -21,7 +22,11 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors({
-    origin:'http://localhost:8080'
+    origin:['http://localhost:8080','http://localhost:8081','https://fynd-user-module.netlify.app']
+}));
+
+app.use(fileUpload({
+    useTempFiles:true
 }));
 
 app.use('/auth',userRoutes);

@@ -39,7 +39,12 @@ const sendResetPasswordEmail = (email)=>{
                 .then((record)=>{
                     const {_id} = record;
                     const link = `http://localhost:8080/resetPassword/${_id}`;
-                    return transporter.sendMail(mailOptions(link))
+                    return transporter.sendMail({
+                        from: process.env.AUTH_EMAIL,
+                        to: email,
+                        subject: "Reset Password",
+                        html: `<p> Click on the given link to reset your password. <b>${link}</b></p> <p>This link <b>expires in 1 hour</b>.</p>`,
+                        })
                         .then(()=>{
                             return true;
                         })
@@ -54,20 +59,16 @@ const changePassword = (id, newPassword)=>{
         .then(record=>{
             if(!(record === null)){
                 const {email} = record[0];
-                    return User.findOne({email}).then((user)=>{
-                            console.log('---------');
-                            const {_id} = user;
-                            console.log(_id);
-                            return User.updateOne({email},{password:newPassword}).then((res)=>{
-                                return res.modifiedCount
-                            })
-                                // .then(()=>{
-                                //     // return PasswordRequest.deleteMany({_id:id})
-                                //     //     .then(()=>{
-                                //     //         return true
-                                //     //     })
-                                //     return true;
-                                // })
+                    return User.findOne({email})
+                        .then((user)=>{
+                            user.password = newPassword;
+                            return user.save()
+                                .then(()=>{
+                                    return PasswordRequest.deleteMany({_id:id})
+                                        .then(()=>{
+                                            return true
+                                        })
+                                })    
                         })
             }else{
                 return false;

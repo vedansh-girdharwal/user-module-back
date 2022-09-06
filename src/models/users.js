@@ -20,6 +20,25 @@ const userSchema = new mongoose.Schema({
         default: 'standard',
         enum: ['admin','standard']
     },
+    profileCreated:{
+        type:String,
+        default:new Date().toLocaleString('en-US', {timeZone: 'Asia/Kolkata',dateStyle:'long',timeStyle:'long'})
+    },
+    phone:{
+        type:Number,
+    },
+    address:{
+        type: String
+    },
+    gender:{
+        type:String,
+        default:"not mentioned",
+        enum:['male','female','other',"not mentioned"]
+    },
+    imageUrl:{
+        type:String,
+        default:"http://res.cloudinary.com/dxur0nykf/image/upload/v1662311342/almr0inoyeasiunshszw.jpg"
+    },
     verified:{
         type: Boolean,
         default: false

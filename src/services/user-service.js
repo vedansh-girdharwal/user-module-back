@@ -78,9 +78,43 @@ const getUserById = (userId)=>{
     })
 }
 
+const fetchUsers = ()=>{
+    return User.find()
+        .then(users=>{
+            return users;
+        }).catch(error=>{
+            const err = new Error(error.message);
+            throw err;
+        })
+}
+
+const editProfile = (userId,updates)=>{
+    console.log('------',userId,"--------",updates);
+    return User.findByIdAndUpdate(userId,{$set:updates})
+        .then(response=>{
+            return response
+        }).catch(error=>{
+            const err = new Error(error.message);
+            throw err;
+        })
+}
+
+const changeUserRole = (id,newRole)=>{
+    return User.findByIdAndUpdate(id, {role:newRole})
+        .then((res)=>{
+            return res;
+        }).catch(error=>{
+            const err = new Error(error.message);
+            throw err;
+        })
+}
+
 module.exports = {
     addUser,
     getUser,
     matchPassword,
-    getUserById
+    getUserById,
+    fetchUsers,
+    editProfile,
+    changeUserRole
 }

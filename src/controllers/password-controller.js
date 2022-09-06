@@ -20,15 +20,15 @@ const resetPassword = (req,res,next)=>{
     const {password:newPass} = req.body;
     changePassword(id,newPass)
         .then(result=>{
-            if(result==="UPDATED"){
+            if(result){
                 res.status(201).json({
                     status:"UPDATED",
-                    message:`${result}`
+                    message:`Password has been updated`
                 })
             }else{
                 res.status(201).json({
                     status:"TIMEOUT",
-                    message:`${result}`
+                    message:`Password reset link is expired`
                 })
             }
         }).catch(error=>{
