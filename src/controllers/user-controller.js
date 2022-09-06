@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const {addUser,getUser:getUserByEmail,matchPassword,fetchUsers,changeUserRole,editProfile} = require('../services/user-service.js');
+const {addUser,getUser:getUserByEmail,matchPassword,fetchUsers,changeUserRole,editProfile,deleteUser,getUserById} = require('../services/user-service.js');
 const {sendOTPEmail} = require('../services/user-otp-verification-service.js');
 const cloudinary = require('cloudinary').v2;
 
@@ -221,6 +221,29 @@ const updateProfile = (req,res,next)=>{
         })
 }
 
+const deleteAcc = (req,res,next)=>{
+    const id = req.params.id;
+    getUserById(id)
+        .then(()=>{
+            deleteUser(id)
+                .then(response=>{
+                    if(response){
+                        res.status(200).json({
+                            status:'DELETED'
+                        })
+                    }else{
+                        res.status(400).json({
+                            status:'NOTDELETED',
+                            message:'Bad credentials or account already deleted'
+                        })
+                    }
+                })
+        }).catch(error=>{
+            const httpError = new HttpError(error.message,500);
+            next(httpError);
+        })
+}
+
 const changeRole = (req,res,next)=>{
     const id = req.params.id;
     const {role:userRole} = req.body;
@@ -272,5 +295,6 @@ module.exports = {
     getUser,
     updateProfile,
     updateImage,
-    changeRole
+    changeRole,
+    deleteAcc
 }

@@ -21,14 +21,6 @@ transporter.verify((error,success)=>{
 })
 
 const sendResetPasswordEmail = (email)=>{
-    const mailOptions =(link)=> {
-        return {
-        from: process.env.AUTH_EMAIL,
-        to: email,
-        subject: "Reset Password",
-        html: `<p> Click on the given link to reset your password. <b>${link}</b></p> <p>This link <b>expires in 1 hour</b>.</p>`,
-        }
-    };
     const passwordRequest = {
         createdAt: Date.now(),
         email: email

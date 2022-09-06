@@ -78,6 +78,20 @@ const getUserById = (userId)=>{
     })
 }
 
+const deleteUser = (userId)=>{
+    return User.findByIdAndDelete(userId)
+        .then(result=>{
+            if(result){
+                return true;
+            }else{
+                const error = new Error('Bad Credentials');
+                throw error;
+            }
+        }).catch(error=>{
+            throw error;
+        })
+}
+
 const fetchUsers = ()=>{
     return User.find()
         .then(users=>{
@@ -89,7 +103,6 @@ const fetchUsers = ()=>{
 }
 
 const editProfile = (userId,updates)=>{
-    console.log('------',userId,"--------",updates);
     return User.findByIdAndUpdate(userId,{$set:updates})
         .then(response=>{
             return response
@@ -116,5 +129,6 @@ module.exports = {
     getUserById,
     fetchUsers,
     editProfile,
-    changeUserRole
+    changeUserRole,
+    deleteUser
 }

@@ -5,7 +5,7 @@ const authenticate = ( req, res, next ) => {
     
     jwt.verify( token, process.env.JWT_SECRET_KEY, function( err, claims ) {
         if( err ) {
-            const error = new Error( 'Bad credentials' );
+            const error = new Error( 'Not authenticated' );
             // invalid user
             error.status = 401;
             next( error );
