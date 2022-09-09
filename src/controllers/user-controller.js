@@ -169,7 +169,8 @@ const updateImage = (req,res,next)=>{
                             delete response._doc.__v
                             res.status(203).json({
                                 status:"UPDATED",
-                                response
+                                response,
+                                imageUrl:result.url
                             })
                         }
                     }).catch(error=>{

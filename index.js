@@ -54,7 +54,8 @@ passport.use(new googleStrategy({
                             if(err) throw err;
                             const data = {
                                 token,
-                                name:user.name
+                                name:user.name,
+                                role:user.role
                             }
                             console.log(data);
                             return done(null,data);
@@ -71,7 +72,8 @@ passport.use(new googleStrategy({
                 if(err) throw err;
                 const data = {
                     token,
-                    name:user.name
+                    name:user.name,
+                    role:user.role
                 }
                 console.log(data);
                 return done(null,data);

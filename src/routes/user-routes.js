@@ -11,7 +11,6 @@ router.post('/register',register);
 router.post('/:id/verifyOTP',verifyOTP)
 router.post('/:id/resendOTP',resendOTP)
 router.post('/login',login);
-router.post('/googlelogin',googlelogin);
 router.post('/forgotPassword',sendResetLink);
 router.post('/:id/resetPassword',resetPassword);
 router.get('/user',authenticate, getUser);
@@ -22,10 +21,10 @@ router.patch('/:id/changeRole',authenticate, authorize(['admin']),changeRole);
 router.delete('/:id/deleteUser',authenticate,deleteAcc);
 router.get('/google',passport.authenticate('google',{scope:['profile', 'email'],session:false}));
 router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/',session:false}),function (req,res){
-    let {name, token} = res.req.user;
-    console.log(res.req);
-    // res.redirect(`http://localhost:8080/middleware?name=${name}&token=${token}`)
-    res.redirect(`https://fynd-user-module.netlify.app/middleware?name=${name}&token=${token}`)
+    let {name, token,role} = res.req.user;
+    // console.log(res.req);
+    // res.redirect(`http://localhost:8080/middleware?name=${name}&token=${token}&role=${role}`)
+    res.redirect(`https://fynd-user-module.netlify.app/middleware?name=${name}&token=${token}&role=${role}`)
 })
 
 module.exports =  router;
