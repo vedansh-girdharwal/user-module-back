@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const {OAuth2Client} = require('google-auth-library');
 const {addUser,getUser:getUserByEmail,matchPassword,fetchUsers,changeUserRole,editProfile,deleteUser,getUserById} = require('../services/user-service.js');
 const {sendOTPEmail} = require('../services/user-otp-verification-service.js');
 const cloudinary = require('cloudinary').v2;
@@ -198,6 +199,25 @@ const updateImage = (req,res,next)=>{
     // User.update({_id:userId},{$set:updates})
 }
 
+const googlelogin = (req,res,next)=>{
+    const CLIENT = "480166706848-ni4j67rc3bb1r3lc7blk0ss2sh73omm7.apps.googleusercontent.com"
+    console.log(req)
+    res.json({
+        message:req
+    })
+    // const {credential:token} = req.body
+    // const client = new OAuth2Client(CLIENT);
+    // async function verify(){
+    //     const ticket = await client.verifyIdToken({
+    //         idToken:token,
+    //         audience: CLIENT
+    //     });
+    //     const payload = ticket.getPayload();
+    //     console.log(payload)
+    // }
+    // verify().catch(console.error);
+}
+
 const updateProfile = (req,res,next)=>{
     const {id:userId}=req.params;
     const updates = {};
@@ -296,5 +316,6 @@ module.exports = {
     updateProfile,
     updateImage,
     changeRole,
-    deleteAcc
+    deleteAcc,
+    googlelogin
 }

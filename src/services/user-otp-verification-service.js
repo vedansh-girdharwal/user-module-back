@@ -41,7 +41,7 @@ const sendOTPEmail = ({_id,email})=>{
                 createdAt: Date.now(),
                 expiresAt: Date.now()+3600000
             });
-            return userOTPVerification.save()
+            return UserOTPVerification.create(userOTPVerification)
                 .then(()=>{
                     return transporter.sendMail(mailOptions)
                 })
