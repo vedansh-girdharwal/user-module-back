@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport')
 
-const {register,login, getUsers,getUser,updateProfile,updateImage,changeRole,deleteAcc,googlelogin} = require('../controllers/user-controller.js');
+const {register,login, getUsers,getUser,updateProfile,updateImage,changeRole,deleteAcc} = require('../controllers/user-controller.js');
 const {verifyOTP, resendOTP} = require('../controllers/user-otp-verification-controller.js');
 const {sendResetLink, resetPassword} = require('../controllers/password-controller.js');
 const {authenticate, authorize} = require('../middlewares/auth.js');
@@ -22,9 +22,7 @@ router.delete('/:id/deleteUser',authenticate,deleteAcc);
 router.get('/google',passport.authenticate('google',{scope:['profile', 'email'],session:false}));
 router.get('/google/callback',passport.authenticate('google',{failureRedirect:'/',session:false}),function (req,res){
     let {name, token,role} = res.req.user;
-    // console.log(res.req);
-    // res.redirect(`http://localhost:8080/middleware?name=${name}&token=${token}&role=${role}`)
-    res.redirect(`https://fynd-user-module.netlify.app/middleware?name=${name}&token=${token}&role=${role}`)
+    res.redirect(`${process.env.FRONTEND_URL}/middleware?name=${name}&token=${token}&role=${role}`)
 })
 
 module.exports =  router;

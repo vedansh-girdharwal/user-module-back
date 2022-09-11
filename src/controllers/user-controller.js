@@ -95,7 +95,6 @@ const getUser = (req,res,next)=>{
     jwt.verify( token, process.env.JWT_SECRET_KEY, function( err, claims ) {
         if( err ) {
             const error = new Error( 'Bad credentials' );
-            // invalid user
             error.status = 401;
             next( error );
             return;
@@ -161,7 +160,6 @@ const updateImage = (req,res,next)=>{
                 next(httpError);
             }else{
                 updates.imageUrl = result.url;
-                console.log(result)
                 editProfile(userId,updates)
                 .then(response=>{
                         if(response!==null){
@@ -181,42 +179,6 @@ const updateImage = (req,res,next)=>{
         })
 
     }
-    // else{
-    //     console.log(updates);
-    //     editProfile(userId,updates)
-    //                 .then(response=>{
-    //                     if(response!==null){
-    //                         delete response._doc.password;
-    //                         delete response._doc.__v;
-    //                         res.status(203).json({
-    //                                 response
-    //                             })
-    //                     }    
-    //                     }).catch(error=>{
-    //                         const httpError = new HttpError(error.message,500);
-    //                         next(httpError);
-    //                     })
-    // }
-    // User.update({_id:userId},{$set:updates})
-}
-
-const googlelogin = (req,res,next)=>{
-    const CLIENT = "480166706848-ni4j67rc3bb1r3lc7blk0ss2sh73omm7.apps.googleusercontent.com"
-    console.log(req)
-    res.json({
-        message:req
-    })
-    // const {credential:token} = req.body
-    // const client = new OAuth2Client(CLIENT);
-    // async function verify(){
-    //     const ticket = await client.verifyIdToken({
-    //         idToken:token,
-    //         audience: CLIENT
-    //     });
-    //     const payload = ticket.getPayload();
-    //     console.log(payload)
-    // }
-    // verify().catch(console.error);
 }
 
 const updateProfile = (req,res,next)=>{
@@ -317,6 +279,5 @@ module.exports = {
     updateProfile,
     updateImage,
     changeRole,
-    deleteAcc,
-    googlelogin
+    deleteAcc
 }
