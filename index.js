@@ -86,9 +86,7 @@ app.use(morgan('combined'));
 app.use(express.static(path.join(process.cwd(), 'public')));
 app.use(express.json());
 app.use(express.urlencoded());
-app.use(cors({
-    origin:['http://localhost:8080','http://localhost:8081','http://localhost:8082','https://fynd-user-module.netlify.app']
-}));
+app.use(cors());
 
 app.use(fileUpload({
     useTempFiles:true
