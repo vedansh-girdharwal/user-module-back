@@ -30,12 +30,12 @@ const sendResetPasswordEmail = (email)=>{
             return PasswordRequest.create(passwordRequest)
                 .then((record)=>{
                     const {_id} = record;
-                    const link = `http://localhost:8080/resetPassword/${_id}`;
+                    const link = `https://fynd-user-module.netlify.app/resetPassword/${_id}`;
                     return transporter.sendMail({
                         from: process.env.AUTH_EMAIL,
                         to: email,
                         subject: "Reset Password",
-                        html: `<p> Click on the given link to reset your password. <b>${link}</b></p> <p>This link <b>expires in 1 hour</b>.</p>`,
+                        html: `<p> Click on the given link to reset your password. <b>${link}</b></p> <p>This link <span style="color:crimson"><b>expires in 1 hour</b></span>.</p>`,
                         })
                         .then(()=>{
                             return true;

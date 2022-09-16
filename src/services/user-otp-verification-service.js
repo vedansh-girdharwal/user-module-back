@@ -24,12 +24,12 @@ transporter.verify((error,success)=>{
 
 const sendOTPEmail = ({_id,email})=>{
     const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
-
+    const link = `https://fynd-user-module.netlify.app/${_id}/verifyOTP`;
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Verify your Email",
-        html: `<p> Enter <b>${otp}</b> in the app to verify your email address and continue to login.</p> <p>This code <b>expires in 1 hour</b>.</p>`,
+        html: `<p> Enter <span style="color:blue"><b>${otp}</b></span> in the app to verify your email address and continue to login.</p> <p>If you have moved from the verify OTP page, You can verify your email on this link ${link} .</p> <p>This code <span style="color:crimson"><b>expires in 1 hour</b></span>.</p>`,
     };
 
     const salt = 10;
